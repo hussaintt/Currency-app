@@ -23,9 +23,7 @@ object Repo {
                 job?.let {
                     CoroutineScope(IO + it).launch {
                         val currencyListResponse = MyRetrofitBuider.apiService.getCurrencyList(
-                            Resources.getSystem().getString(
-                                R.string.api_key
-                            )
+                           "182a31e1cf69b50bba2621ee49965329"
                         )
                         withContext(Main) {
                             value = currencyListResponse

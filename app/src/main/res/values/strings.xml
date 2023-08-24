@@ -2,5 +2,8 @@
     <string name="app_name">Currency app</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="first_page">Hello First Page</string>
+    <string name="second_page">Hello Second Page</string>
+
     <string name="api_key">182a31e1cf69b50bba2621ee49965329</string>
 </resources>
