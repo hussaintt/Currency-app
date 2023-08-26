@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hussaintt55.currencyapp.model.CurrencyList.CurrencyListResponse
+import com.hussaintt55.currencyapp.model.Historical.HistoricalResponse
 import kotlinx.coroutines.launch
 
 class MyViewModel() : ViewModel() {
@@ -28,6 +29,17 @@ class MyViewModel() : ViewModel() {
         viewModelScope.launch {
             val result = DataRepository.fetchData()
             _data.value = result
+        }
+    }
+
+
+    private val _dataHistorical = MutableLiveData<Result<HistoricalResponse>>()
+    val dataHistorical: LiveData<Result<HistoricalResponse>> = _dataHistorical
+
+    fun fetchDataHistorical(date:String) {
+        viewModelScope.launch {
+            val result = DataRepository.fetchDataHistorical(date)
+            _dataHistorical.value = result
         }
     }
 }

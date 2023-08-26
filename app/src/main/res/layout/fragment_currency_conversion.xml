@@ -26,7 +26,7 @@
 
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/second_currency"
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginTop="40dp"
@@ -36,7 +36,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/first_currency"
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginTop="40dp"
@@ -55,8 +55,8 @@
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/spinner2"
-            app:layout_constraintStart_toStartOf="@+id/spinner2" />
+            app:layout_constraintEnd_toEndOf="@+id/first_currency"
+            app:layout_constraintStart_toStartOf="@+id/first_currency" />
 
         <TextView
             android:id="@+id/textView4"
@@ -68,19 +68,19 @@
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/spinner"
-            app:layout_constraintStart_toStartOf="@+id/spinner" />
+            app:layout_constraintEnd_toEndOf="@+id/second_currency"
+            app:layout_constraintStart_toStartOf="@+id/second_currency" />
 
         <ImageView
             android:id="@+id/reverse"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/baseline_compare_arrows_24"
-            app:layout_constraintBottom_toBottomOf="@+id/spinner2"
-            app:layout_constraintEnd_toStartOf="@+id/spinner"
+            app:layout_constraintBottom_toBottomOf="@+id/first_currency"
+            app:layout_constraintEnd_toStartOf="@+id/second_currency"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/spinner2"
-            app:layout_constraintTop_toTopOf="@+id/spinner2" />
+            app:layout_constraintStart_toEndOf="@+id/first_currency"
+            app:layout_constraintTop_toTopOf="@+id/first_currency" />
 
         <EditText
             android:id="@+id/fromValue"
@@ -94,8 +94,8 @@
             android:textStyle="bold"
 
             app:layout_constraintBottom_toBottomOf="@+id/textView6"
-            app:layout_constraintEnd_toEndOf="@+id/spinner2"
-            app:layout_constraintStart_toStartOf="@+id/spinner2"
+            app:layout_constraintEnd_toEndOf="@+id/first_currency"
+            app:layout_constraintStart_toStartOf="@+id/first_currency"
             app:layout_constraintTop_toTopOf="@+id/textView6" />
 
         <TextView
@@ -109,8 +109,8 @@
             android:maxLines="1"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/textView6"
-            app:layout_constraintEnd_toEndOf="@+id/spinner"
-            app:layout_constraintStart_toStartOf="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="@+id/second_currency"
+            app:layout_constraintStart_toStartOf="@+id/second_currency"
             app:layout_constraintTop_toTopOf="@+id/textView6" />
 
         <TextView

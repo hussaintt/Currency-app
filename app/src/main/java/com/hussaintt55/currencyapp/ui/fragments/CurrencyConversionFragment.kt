@@ -19,12 +19,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.hussaintt55.currencyapp.R
 import com.hussaintt55.currencyapp.ui.MyViewModel
-import java.lang.Math.log
+import com.hussaintt55.currencyapp.ui.brain.brain.calculateCurrentValue
+import com.hussaintt55.currencyapp.ui.brain.brain.roundToDecimalPlaces
 import java.lang.Math.round
 
 
 class CurrencyConversionFragment : Fragment() {
 
+    var spinner:Spinner?=null
+    var spinner2:Spinner?=null
+    var myView:View?=null
+    var details:Button?=null
+    var firstCurrencyText:EditText?=null
+    var secondCurrencyText:TextView?=null
+    var reverse:ImageView?=null
+    lateinit var viewModel: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,16 +59,7 @@ class CurrencyConversionFragment : Fragment() {
         viewModel.fetchData()
     }
 
-    var spinner:Spinner?=null
-    var spinner2:Spinner?=null
-    var myView:View?=null
-    var details:Button?=null
-    var firstCurrencyText:EditText?=null
-    var secondCurrencyText:TextView?=null
 
-
-    var reverse:ImageView?=null
-    lateinit var viewModel: MyViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,8 +77,8 @@ class CurrencyConversionFragment : Fragment() {
          setupReverse()
     }
     private fun setupViews(){
-        spinner = myView?.findViewById<Spinner>(R.id.spinner)
-        spinner2 = myView?.findViewById<Spinner>(R.id.spinner2)
+        spinner = myView?.findViewById<Spinner>(R.id.second_currency)
+        spinner2 = myView?.findViewById<Spinner>(R.id.first_currency)
         firstCurrencyText = myView?.findViewById(R.id.fromValue)
         secondCurrencyText = myView?.findViewById(R.id.ToValue)
         reverse = myView?.findViewById(R.id.reverse)
@@ -155,26 +155,23 @@ class CurrencyConversionFragment : Fragment() {
         }
     }
 
-    fun calculateCurrentValue(Value: Double, currency1: Double, currency2: Double): Double {
-        return (Value * (currency1 / currency2))
-    }
+
 
     fun reverseValues(){
         val temp1 = viewModel.Currency1Possition.value
         val temp2 = viewModel.Currency2Possition.value
+        //viewModel.Currency1Possition.value = temp2
+        //viewModel.Currency2Possition.value = temp1
+
         temp2?.let {spinner?.setSelection(it) }
         temp1?.let {spinner2?.setSelection(temp1)  }
+
+        viewModel.Currency1SelectedKey.value =spinner?.selectedItem.toString()
+        viewModel.Currency2SelectedKey.value =spinner2?.selectedItem.toString()
         updateValues()
     }
 
-    fun roundToDecimalPlaces(number: Double, decimalPlaces: Int): Double {
-        val factor = Math.pow(10.0, decimalPlaces.toDouble())
-        return round(number * factor) / factor
-    }
 
-    override fun onPause() {
-        super.onPause()
-    }
 
     override fun onResume() {
         super.onResume()
