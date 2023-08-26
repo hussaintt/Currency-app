@@ -13,5 +13,7 @@ data class CurrencyListResponse(
     @SerializedName("success")
     val success: Boolean,
     @SerializedName("timestamp")
-    val timestamp: Int
+    val timestamp: Int,
+    @SerializedName("error")
+    val error: Error,
 )
