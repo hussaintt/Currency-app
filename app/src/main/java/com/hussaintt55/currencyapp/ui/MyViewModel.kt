@@ -10,6 +10,17 @@ import kotlinx.coroutines.launch
 
 class MyViewModel() : ViewModel() {
 
+
+    val Currency1SelectedKey :MutableLiveData<String> = MutableLiveData()
+    val Currency2SelectedKey :MutableLiveData<String> = MutableLiveData()
+    val Currency1Possition :MutableLiveData<Int> = MutableLiveData()
+    val Currency2Possition :MutableLiveData<Int> = MutableLiveData()
+    val Currency1SelectedValue :MutableLiveData<Double> = MutableLiveData()
+    val Currency2SelectedValue :MutableLiveData<Double> = MutableLiveData()
+    val desierdAmount :MutableLiveData<Double> = MutableLiveData()
+    val myHashMap :MutableLiveData<HashMap<String,Double>> = MutableLiveData()
+
+
     private val _data = MutableLiveData<Result<CurrencyListResponse>>()
     val data: LiveData<Result<CurrencyListResponse>> = _data
 
