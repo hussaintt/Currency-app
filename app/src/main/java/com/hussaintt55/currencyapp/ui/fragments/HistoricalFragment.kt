@@ -1,5 +1,7 @@
 package com.hussaintt55.currencyapp.ui.fragments
 
+import DataRepository
+import DataRepository.popularCountries
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,25 +11,28 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hussaintt55.currencyapp.R
 import com.hussaintt55.currencyapp.model.Historical.HistoricalResponse
-import com.hussaintt55.currencyapp.model.Historical.Rates
+import com.hussaintt55.currencyapp.model.adapter.Conversations
 import com.hussaintt55.currencyapp.ui.MyViewModel
+import com.hussaintt55.currencyapp.ui.adapter.OtherCurrenenciesRecycler
 import com.hussaintt55.currencyapp.ui.brain.brain
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.math.log
 
 
-class HistoricalFragment : Fragment() {
 
+class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickListener {
 
+    var OtherCurrenenciesList: ArrayList<Conversations>?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         var counter = 0
+         OtherCurrenenciesList= java.util.ArrayList()
         observer = Observer<Result<HistoricalResponse>> { result ->
             val resultSccess = result.isSuccess
             if (resultSccess){
@@ -67,6 +72,7 @@ class HistoricalFragment : Fragment() {
         viewModel.fetchDataHistorical(getPreviousDate(1))
         counter++
         }
+
     }
     lateinit var viewModel: MyViewModel
     lateinit var myView: View
@@ -78,6 +84,7 @@ class HistoricalFragment : Fragment() {
         // Inflate the layout for this fragment
         myView =  inflater.inflate(R.layout.fragment_historical, container, false)
         initViews()
+        setAdapter()
         return myView
     }
 
@@ -87,7 +94,7 @@ class HistoricalFragment : Fragment() {
             firstCurrencyTextD3?.text = viewModel.Currency2SelectedKey.value.toString()
             secondCurrencyTextD3?.text = viewModel.Currency1SelectedKey.value.toString()
             firstCurrencyValueD3?.text = viewModel.desierdAmount.value.toString()
-            secondCurrencyValueD3?.let { data?.rates?.let { it1 -> updateValues(it, it1) } }
+            secondCurrencyValueD3?.let { data.rates.let { it1 -> updateValues(it, it1) } }
         }
     }
 
@@ -125,30 +132,31 @@ class HistoricalFragment : Fragment() {
     override fun onResume() {
         super.onResume()
     }
-    fun initViews(){
-         Day1=myView?.findViewById(R.id.date)
-         Day2=myView?.findViewById(R.id.date2)
-         Day3=myView?.findViewById(R.id.date3)
+    private fun initViews(){
+         Day1= myView.findViewById(R.id.date)
+         Day2= myView.findViewById(R.id.date2)
+         Day3= myView.findViewById(R.id.date3)
 
 
-         firstCurrencyTextD1=myView?.findViewById(R.id.first_currency)
-         firstCurrencyTextD2=myView?.findViewById(R.id.first_currency2)
-         firstCurrencyTextD3=myView?.findViewById(R.id.first_currency3)
+         firstCurrencyTextD1= myView.findViewById(R.id.first_currency)
+         firstCurrencyTextD2= myView.findViewById(R.id.from)
+         firstCurrencyTextD3=myView.findViewById(R.id.first_currency3)
 
 
-         secondCurrencyTextD1=myView?.findViewById(R.id.second_currency)
-         secondCurrencyTextD2=myView?.findViewById(R.id.second_currency2)
-         secondCurrencyTextD3=myView?.findViewById(R.id.second_currency3)
+         secondCurrencyTextD1=myView.findViewById(R.id.second_currency)
+         secondCurrencyTextD2=myView.findViewById(R.id.to)
+         secondCurrencyTextD3=myView.findViewById(R.id.second_currency3)
 
-         firstCurrencyValueD1=myView?.findViewById(R.id.fromValue)
-         firstCurrencyValueD2=myView?.findViewById(R.id.fromValue2)
-         firstCurrencyValueD3=myView?.findViewById(R.id.fromValue3)
+         firstCurrencyValueD1=myView.findViewById(R.id.fromValue)
+         firstCurrencyValueD2=myView.findViewById(R.id.fromValue2)
+         firstCurrencyValueD3=myView.findViewById(R.id.fromValue3)
 
 
-         secondCurrencyValueD1=myView?.findViewById(R.id.ToValue)
-         secondCurrencyValueD2=myView?.findViewById(R.id.ToValue2)
-         secondCurrencyValueD3=myView?.findViewById(R.id.ToValue3)
+         secondCurrencyValueD1=myView.findViewById(R.id.ToValue)
+         secondCurrencyValueD2=myView.findViewById(R.id.ToValue2)
+         secondCurrencyValueD3=myView.findViewById(R.id.ToValue3)
 
+         myRecycler1 = myView.findViewById(R.id.myRecycler)
 
     }
     private fun updateValues(textView: TextView,rates: HashMap<String,Double>) {
@@ -157,8 +165,20 @@ class HistoricalFragment : Fragment() {
         val c2=rates.get(viewModel.Currency2SelectedKey.value)
         if (v1!=null&&c1!=null&&c2!=null){
             val value =(brain.calculateCurrentValue(v1, c1, c2))
-            textView?.text = brain.roundToDecimalPlaces(value, 5).toString()
+            textView.text = brain.roundToDecimalPlaces(value, 5).toString()
         }
+    }
+    private fun setAdapter(){
+                fillRecyclerList()
+                if (OtherCurrenenciesList?.size!! >0){
+                val layout = LinearLayoutManager(context)
+                myRecycler1?.layoutManager = layout
+                val adapter = OtherCurrenenciesRecycler(this,
+                    OtherCurrenenciesList?.size!!, OtherCurrenenciesList!!
+                )
+                myRecycler1?.adapter = adapter
+                }
+
     }
 
     var Day1: TextView?=null
@@ -180,5 +200,24 @@ class HistoricalFragment : Fragment() {
     var secondCurrencyValueD1: TextView?=null
     var secondCurrencyValueD2: TextView?=null
     var secondCurrencyValueD3: TextView?=null
+    var myRecycler1:RecyclerView?=null
+    override fun onClickListener(clickedItemIndex: Int) {
+
+    }
+
+    private fun fillRecyclerList(){
+        for (item in popularCountries){
+            if (item!=viewModel.Currency1SelectedKey.value){
+                  val value=  brain.calculateCurrentValue(1.0, viewModel.Currency1SelectedValue.value!!,
+                        viewModel.myHashMap.value?.get(item)!!
+                    )
+                val textValue = brain.roundToDecimalPlaces(value!!, 5)
+                val conversations = Conversations(viewModel.Currency2SelectedKey.value!!,item,textValue)
+                    OtherCurrenenciesList?.add(conversations)
+            }
+        }
+    }
+
+
 
 }

@@ -167,7 +167,7 @@
 
 
                 <TextView
-                    android:id="@+id/second_currency2"
+                    android:id="@+id/to"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -179,7 +179,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView4a" />
 
                 <TextView
-                    android:id="@+id/first_currency2"
+                    android:id="@+id/from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -213,8 +213,8 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/date2"
-                    app:layout_constraintEnd_toEndOf="@+id/first_currency2"
-                    app:layout_constraintStart_toStartOf="@+id/first_currency2" />
+                    app:layout_constraintEnd_toEndOf="@+id/from"
+                    app:layout_constraintStart_toStartOf="@+id/from" />
 
                 <TextView
                     android:id="@+id/textView4a"
@@ -225,8 +225,8 @@
                     android:layout_marginTop="20dp"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="@+id/second_currency2"
-                    app:layout_constraintStart_toStartOf="@+id/second_currency2"
+                    app:layout_constraintEnd_toEndOf="@+id/to"
+                    app:layout_constraintStart_toStartOf="@+id/to"
                     app:layout_constraintTop_toBottomOf="@+id/date2" />
 
                 <ImageView
@@ -234,11 +234,11 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/baseline_arrow_forward_24"
-                    app:layout_constraintBottom_toBottomOf="@+id/first_currency2"
-                    app:layout_constraintEnd_toStartOf="@+id/second_currency2"
+                    app:layout_constraintBottom_toBottomOf="@+id/from"
+                    app:layout_constraintEnd_toStartOf="@+id/to"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/first_currency2"
-                    app:layout_constraintTop_toTopOf="@+id/first_currency2"
+                    app:layout_constraintStart_toEndOf="@+id/from"
+                    app:layout_constraintTop_toTopOf="@+id/from"
                     app:tint="@color/blue_light" />
 
                 <TextView
@@ -252,8 +252,8 @@
                     android:textSize="20sp"
 
                     app:layout_constraintBottom_toBottomOf="@+id/textView6a"
-                    app:layout_constraintEnd_toEndOf="@+id/first_currency2"
-                    app:layout_constraintStart_toStartOf="@+id/first_currency2"
+                    app:layout_constraintEnd_toEndOf="@+id/from"
+                    app:layout_constraintStart_toStartOf="@+id/from"
                     app:layout_constraintTop_toTopOf="@+id/textView6a" />
 
                 <TextView
@@ -266,8 +266,8 @@
                     android:textSize="20sp"
                     android:maxLines="1"
                     app:layout_constraintBottom_toBottomOf="@+id/textView6a"
-                    app:layout_constraintEnd_toEndOf="@+id/second_currency2"
-                    app:layout_constraintStart_toStartOf="@+id/second_currency2"
+                    app:layout_constraintEnd_toEndOf="@+id/to"
+                    app:layout_constraintStart_toStartOf="@+id/to"
                     app:layout_constraintTop_toTopOf="@+id/textView6a" />
 
                 <TextView
@@ -419,6 +419,11 @@
             android:orientation="vertical"
             android:background="@color/white"
             >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/myRecycler"
+                android:background="@color/blue_light"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
     </LinearLayout>

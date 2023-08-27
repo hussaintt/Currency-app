@@ -54,4 +54,5 @@ object DataRepository {
         }
     }
 
+     val popularCountries = arrayListOf<String>("EGP","USD","SAR","CAD","GBP","INR","RUB","QAR","AED","AUD","KYD")
 }

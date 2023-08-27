@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/blue_light"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="USD"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/reverse2"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="USD"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/reverse2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+
+
+
+        <ImageView
+            android:id="@+id/reverse2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_arrow_forward_24"
+            app:layout_constraintBottom_toBottomOf="@+id/from"
+            app:layout_constraintEnd_toStartOf="@+id/to"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/from"
+            app:layout_constraintTop_toTopOf="@+id/from"
+
+             />
+
+        <TextView
+            android:id="@+id/fromValue2"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text="1"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+
+            app:layout_constraintBottom_toBottomOf="@+id/textView6a"
+            app:layout_constraintEnd_toEndOf="@+id/from"
+            app:layout_constraintStart_toStartOf="@+id/from"
+            app:layout_constraintTop_toTopOf="@+id/textView6a" />
+
+        <TextView
+            android:id="@+id/ToValue2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxEms="8"
+            android:text="value2"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/textView6a"
+            app:layout_constraintEnd_toEndOf="@+id/to"
+            app:layout_constraintStart_toStartOf="@+id/to"
+            app:layout_constraintTop_toTopOf="@+id/textView6a" />
+
+        <TextView
+            android:id="@+id/textView6a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="="
+            android:textColor="@color/white"
+            android:textSize="38sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/reverse2"
+            app:layout_constraintStart_toStartOf="@+id/reverse2"
+            app:layout_constraintTop_toBottomOf="@+id/reverse2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
