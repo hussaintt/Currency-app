@@ -2,12 +2,15 @@ package com.hussaintt55.currencyapp.ui.fragments
 
 import DataRepository
 import DataRepository.popularCountries
+import android.graphics.Insets
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsAnimation.Bounds
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +22,15 @@ import com.hussaintt55.currencyapp.model.adapter.Conversations
 import com.hussaintt55.currencyapp.ui.MyViewModel
 import com.hussaintt55.currencyapp.ui.adapter.OtherCurrenenciesRecycler
 import com.hussaintt55.currencyapp.ui.brain.brain
+import com.patrykandpatrick.vico.core.axis.Axis
+import com.patrykandpatrick.vico.core.axis.AxisManager
+import com.patrykandpatrick.vico.core.axis.AxisPosition
+import com.patrykandpatrick.vico.core.axis.AxisRenderer
+import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
+import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.extension.setFieldValue
+import com.patrykandpatrick.vico.views.chart.ChartView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -27,6 +39,7 @@ import java.time.format.DateTimeFormatter
 class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickListener {
 
     var OtherCurrenenciesList: ArrayList<Conversations>?=null
+    var list_for_chart:ArrayList<Double>?=java.util.ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,8 +50,6 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
             val resultSccess = result.isSuccess
             if (resultSccess){
                 if (result.getOrNull()?.success!!){
-                    Log.d("Debug", "onCreate: receive data "+result.getOrNull())
-                    Log.d("Debug", "onCreate: "+counter)
                     //fill day1 details and call day2 query
                     if (counter ==1){
                         fillDay1(result.getOrNull())
@@ -57,11 +68,11 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
                         counter++
                     }
                 }else{
-                    println("debug: " +result.getOrNull()?.error?.info)
+                    brain.ShowDialog(requireActivity(),result.getOrNull()?.error?.info.toString())
                 }
 
             }else{
-                println( "Debug: "+result.exceptionOrNull())
+                brain.ShowDialog(requireActivity(),result.exceptionOrNull().toString())
             }
         }
         observer?.let {
@@ -94,7 +105,17 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
             firstCurrencyTextD3?.text = viewModel.Currency2SelectedKey.value.toString()
             secondCurrencyTextD3?.text = viewModel.Currency1SelectedKey.value.toString()
             firstCurrencyValueD3?.text = viewModel.desierdAmount.value.toString()
-            secondCurrencyValueD3?.let { data.rates.let { it1 -> updateValues(it, it1) } }
+            secondCurrencyValueD3?.let { data.rates.let { Rates ->
+                updateValues(it, Rates)
+                list_for_chart?.add(brain.calculateCurrentValue(
+                    viewModel.desierdAmount.value!!,
+                    Rates[viewModel.Currency1SelectedKey.value!!]!!,
+                    Rates[viewModel.Currency2SelectedKey.value!!]!!
+                ))
+                progressBar?.visibility = View.INVISIBLE
+                setupChart()
+            }
+            }
         }
     }
 
@@ -103,7 +124,14 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
         firstCurrencyTextD2?.text = viewModel.Currency2SelectedKey.value.toString()
         secondCurrencyTextD2?.text = viewModel.Currency1SelectedKey.value.toString()
         firstCurrencyValueD2?.text = viewModel.desierdAmount.value.toString()
-        secondCurrencyValueD2?.let { data?.rates?.let { it1 -> updateValues(it, it1) } }
+        secondCurrencyValueD2?.let { data?.rates?.let { Rates ->
+            updateValues(it, Rates)
+            list_for_chart?.add(brain.calculateCurrentValue(
+                viewModel.desierdAmount.value!!,
+                Rates[viewModel.Currency1SelectedKey.value!!]!!,
+                Rates[viewModel.Currency2SelectedKey.value!!]!!
+            ))
+        } }
     }
 
     private fun fillDay1(data: HistoricalResponse?) {
@@ -111,7 +139,17 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
         firstCurrencyTextD1?.text = viewModel.Currency2SelectedKey.value.toString()
         secondCurrencyTextD1?.text = viewModel.Currency1SelectedKey.value.toString()
         firstCurrencyValueD1?.text = viewModel.desierdAmount.value.toString()
-        secondCurrencyValueD1?.let { data?.rates?.let { it1 -> updateValues(it, it1) } }
+        secondCurrencyValueD1?.let {
+            data?.rates?.let { Rates -> updateValues(it, Rates)
+                list_for_chart?.add(brain.calculateCurrentValue(
+                    viewModel.desierdAmount.value!!,
+                    Rates.get(viewModel.Currency1SelectedKey.value!!)!!,
+                    Rates.get(viewModel.Currency2SelectedKey.value!!)!!
+                )
+                )
+            }
+
+        }
     }
 
     fun getPreviousDate(day:Long):String{
@@ -127,10 +165,6 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
     override fun onStop() {
         super.onStop()
         observer?.let { viewModel.dataHistorical.removeObserver(it) }
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
     private fun initViews(){
          Day1= myView.findViewById(R.id.date)
@@ -157,7 +191,7 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
          secondCurrencyValueD3=myView.findViewById(R.id.ToValue3)
 
          myRecycler1 = myView.findViewById(R.id.myRecycler)
-
+         progressBar = myView.findViewById(R.id.progressBar)
     }
     private fun updateValues(textView: TextView,rates: HashMap<String,Double>) {
         val v1 = viewModel.desierdAmount.value
@@ -200,6 +234,7 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
     var secondCurrencyValueD1: TextView?=null
     var secondCurrencyValueD2: TextView?=null
     var secondCurrencyValueD3: TextView?=null
+    var progressBar: ProgressBar?=null
     var myRecycler1:RecyclerView?=null
     override fun onClickListener(clickedItemIndex: Int) {
 
@@ -207,17 +242,23 @@ class HistoricalFragment : Fragment(), OtherCurrenenciesRecycler.ListItemClickLi
 
     private fun fillRecyclerList(){
         for (item in popularCountries){
-            if (item!=viewModel.Currency1SelectedKey.value){
-                  val value=  brain.calculateCurrentValue(1.0, viewModel.Currency1SelectedValue.value!!,
-                        viewModel.myHashMap.value?.get(item)!!
+            if (item!=viewModel.Currency2SelectedKey.value){
+                  val value=  brain.calculateCurrentValue(1.0,viewModel.myHashMap.value?.get(item)!!, viewModel.Currency2SelectedValue.value!!
                     )
                 val textValue = brain.roundToDecimalPlaces(value!!, 5)
                 val conversations = Conversations(viewModel.Currency2SelectedKey.value!!,item,textValue)
-                    OtherCurrenenciesList?.add(conversations)
+                OtherCurrenenciesList?.add(conversations)
             }
         }
     }
 
+    private fun setupChart(){
+        list_for_chart?.let {
+            val chartEntryModel = entryModelOf(list_for_chart!![0].toFloat(), list_for_chart!![1].toFloat(), list_for_chart!![2].toFloat())
+            val chart =  myView.findViewById<ChartView>(R.id.any_chart_view)
+            chart.setModel(chartEntryModel)
+        }
 
+    }
 
 }

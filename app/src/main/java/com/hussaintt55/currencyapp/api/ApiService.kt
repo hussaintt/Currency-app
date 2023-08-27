@@ -8,7 +8,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-
     @GET("/latest")
     suspend fun getCurrencyList(
         @Query("access_key") apiKey:String

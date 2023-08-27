@@ -13,12 +13,14 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.hussaintt55.currencyapp.R
 import com.hussaintt55.currencyapp.ui.MyViewModel
+import com.hussaintt55.currencyapp.ui.brain.brain.ShowDialog
 import com.hussaintt55.currencyapp.ui.brain.brain.calculateCurrentValue
 import com.hussaintt55.currencyapp.ui.brain.brain.roundToDecimalPlaces
 import java.lang.Math.round
@@ -32,6 +34,7 @@ class CurrencyConversionFragment : Fragment() {
     var details:Button?=null
     var firstCurrencyText:EditText?=null
     var secondCurrencyText:TextView?=null
+    var progressBar:ProgressBar?=null
     var reverse:ImageView?=null
     lateinit var viewModel: MyViewModel
 
@@ -43,16 +46,16 @@ class CurrencyConversionFragment : Fragment() {
             val resultSccess = result.isSuccess
             if (resultSccess){
                 if (result.getOrNull()?.success!!){
-                    Log.d("Debug", "onCreate: receive data")
                     viewModel.myHashMap.value = result.getOrNull()?.rates
                     setupSpinner()
                     startWithKnownCurrencies()
+                    progressBar?.visibility = View.INVISIBLE
                 }else{
-                    println("debug: " +result.getOrNull()?.error?.info)
+                    ShowDialog(requireActivity(),result.getOrNull()?.error?.info.toString())
                 }
 
             }else{
-                println( "Debug: "+result.exceptionOrNull())
+                ShowDialog(requireActivity(),result.exceptionOrNull().toString())
             }
         }
         }
@@ -83,6 +86,7 @@ class CurrencyConversionFragment : Fragment() {
         secondCurrencyText = myView?.findViewById(R.id.ToValue)
         reverse = myView?.findViewById(R.id.reverse)
         details = myView?.findViewById(R.id.button)
+        progressBar = myView?.findViewById(R.id.progressBar)
         details?.setOnClickListener {
             navigateToDetails()
         }
@@ -175,7 +179,6 @@ class CurrencyConversionFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.d("Debug", "onResume: ")
         fillValuesOnResume()
     }
 
@@ -186,6 +189,7 @@ class CurrencyConversionFragment : Fragment() {
             viewModel.Currency2Possition.value?.let { spinner2?.setSelection(it) }
             viewModel.desierdAmount.value?.let { firstCurrencyText?.text }
             updateValues()
+            progressBar?.visibility = View.INVISIBLE
         }
     }
     private fun startWithKnownCurrencies(){

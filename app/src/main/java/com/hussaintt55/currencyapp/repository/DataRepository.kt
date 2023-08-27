@@ -11,7 +11,7 @@ object DataRepository {
     suspend fun fetchData(): Result<CurrencyListResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = MyRetrofitBuider.apiService.getCurrencyList("182a31e1cf69b50bba2621ee49965329")
+                val response = MyRetrofitBuider.apiService.getCurrencyList(API_KEY)
 
                 if (response.isSuccessful) {
                     val data = response.body()
@@ -35,7 +35,7 @@ object DataRepository {
         return withContext(Dispatchers.IO) {
             try {
                 //required format "2013-03-16"
-                val response = MyRetrofitBuider.apiService.getHistoricalCurrency(date,"182a31e1cf69b50bba2621ee49965329")
+                val response = MyRetrofitBuider.apiService.getHistoricalCurrency(date, API_KEY)
                 if (response.isSuccessful) {
                     val data = response.body()
                     if (data != null) {
@@ -53,6 +53,6 @@ object DataRepository {
             }
         }
     }
-
-     val popularCountries = arrayListOf<String>("EGP","USD","SAR","CAD","GBP","INR","RUB","QAR","AED","AUD","KYD")
+     val popularCountries = arrayListOf("EGP","USD","SAR","CAD","GBP","INR","RUB","QAR","AED","AUD","KYD")
+     private const val API_KEY = "182a31e1cf69b50bba2621ee49965329"
 }
